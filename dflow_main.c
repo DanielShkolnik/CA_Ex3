@@ -124,6 +124,7 @@ void usage(void) {
 }
 
 int main(int argc, const char *argv[]) {
+    /*
     const char *opFname = argv[1];
     const char *progName = argv[2];
     unsigned int opsLatency[MAX_OPS];
@@ -150,7 +151,64 @@ int main(int argc, const char *argv[]) {
     }
     printf("Found %d instructions\n", progLen);
     // Analyze the program
-    ctx = analyzeProg(opsLatency, theProg, progLen);
+*/
+    unsigned int opsLatencyy[6]={1,1,1,4,2,7};
+    ProgCtx ctx;
+    InstInfo *progBuf = malloc(10 * sizeof(InstInfo));
+
+    progBuf[0].opcode = 1;
+    progBuf[0].dstIdx = 2;
+    progBuf[0].src1Idx = 1;
+    progBuf[0].src2Idx = 3;
+
+    progBuf[1].opcode = 1;
+    progBuf[1].dstIdx = 5;
+    progBuf[1].src1Idx = 1;
+    progBuf[1].src2Idx = 0;
+
+    progBuf[2].opcode = 0;
+    progBuf[2].dstIdx = 4;
+    progBuf[2].src1Idx = 2;
+    progBuf[2].src2Idx = 0;
+
+    progBuf[3].opcode = 5;
+    progBuf[3].dstIdx = 17;
+    progBuf[3].src1Idx = 2;
+    progBuf[3].src2Idx = 3;
+
+    progBuf[4].opcode =  4;
+    progBuf[4].dstIdx =  14;
+    progBuf[4].src1Idx =  5;
+    progBuf[4].src2Idx =  2;
+
+    progBuf[5].opcode =  1;
+    progBuf[5].dstIdx =  5;
+    progBuf[5].src1Idx =  17;
+    progBuf[5].src2Idx =  5;
+
+    progBuf[6].opcode =  0;
+    progBuf[6].dstIdx =  16;
+    progBuf[6].src1Idx =  17;
+    progBuf[6].src2Idx =  4;
+
+    progBuf[7].opcode =  0;
+    progBuf[7].dstIdx =  17;
+    progBuf[7].src1Idx =  17;
+    progBuf[7].src2Idx =  2;
+
+    progBuf[8].opcode =  3;
+    progBuf[8].dstIdx =  1;
+    progBuf[8].src1Idx =  5;
+    progBuf[8].src2Idx =  16;
+
+    progBuf[9].opcode =  1;
+    progBuf[9].dstIdx =  1;
+    progBuf[9].src1Idx =  1;
+    progBuf[9].src2Idx =  17;
+
+    ctx = analyzeProg(opsLatencyy, progBuf, 10);
+    //ctx = analyzeProg(opsLatency, theProg, progLen);
+    /*
     if (ctx == PROG_CTX_NULL) {
         printf("Error on invocation to analyzeCtx()\n");
         exit(2);
@@ -189,5 +247,7 @@ int main(int argc, const char *argv[]) {
     }
     freeProgCtx(ctx);
     free(theProg); // We keep theProg up to here to allow your analyzer to use it - if it wants
+     */
+
     return 0;
 }

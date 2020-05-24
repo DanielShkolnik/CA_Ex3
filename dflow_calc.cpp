@@ -49,10 +49,11 @@ public:
     Analyzer(const unsigned int opsLatency[], const InstInfo progTrace[], unsigned int numOfInsts):entry(nullptr) ,exit(
             nullptr) ,opsLatency(opsLatency) ,progTrace(progTrace) ,nodePtrArry(new Node*[numOfInsts]) ,numOfInsts(numOfInsts){
         Node root(0 ,nullptr);
+        std::cout << "check computeDataFlowGraph " << std::endl;
         this->entry = &root;
         Exit tail;
         this->exit = &tail;
-        addDependency(nullptr ,entry);
+        //addToExit(this->entry);
         for(unsigned int i = 0 ; i < this->numOfInsts ; i++){
             nodePtrArry[i] = nullptr;
         }
@@ -124,23 +125,31 @@ public:
             const InstInfo current = progTrace[i];
             Node node(i ,&current);
             addToExit(&node);
-            if(i <= regs[current.src1Idx].regTimer && i <= regs[current.src2Idx].regTimer){
-                addDependency(&node ,regs[current.src1Idx].inst);
-                addDependency(&node ,regs[current.src2Idx].inst);
-                if(regs[current.src1Idx].regTimer > regs[current.src2Idx].regTimer) {
-                    regs[current.dstIdx].regTimer = regs[current.src1Idx].regTimer + 1 + this->opsLatency[current.opcode];
-                }else{
-                    regs[current.dstIdx].regTimer = regs[current.src2Idx].regTimer + 1 + this->opsLatency[current.opcode];
+            std::cout << "check computeDataFlowGraph " << i << std::endl;
+            if(i!=0) {
+                if (i <= regs[current.src1Idx].regTimer && i <= regs[current.src2Idx].regTimer) {
+                    addDependency(&node, regs[current.src1Idx].inst);
+                    addDependency(&node, regs[current.src2Idx].inst);
+                    if (regs[current.src1Idx].regTimer > regs[current.src2Idx].regTimer) {
+                        regs[current.dstIdx].regTimer =
+                                regs[current.src1Idx].regTimer + 1 + this->opsLatency[current.opcode];
+                    } else {
+                        regs[current.dstIdx].regTimer =
+                                regs[current.src2Idx].regTimer + 1 + this->opsLatency[current.opcode];
+                    }
+                } else if (i <= regs[current.src1Idx].regTimer) {
+                    addDependency(&node, regs[current.src1Idx].inst);
+                    regs[current.dstIdx].regTimer =
+                            regs[current.src1Idx].regTimer + 1 + this->opsLatency[current.opcode];
+                } else if (i <= regs[current.src2Idx].regTimer) {
+                    addDependency(&node, regs[current.src2Idx].inst);
+                    regs[current.dstIdx].regTimer =
+                            regs[current.src2Idx].regTimer + 1 + this->opsLatency[current.opcode];
+                } else {
+                    regs[current.dstIdx].regTimer = i + 1 + this->opsLatency[current.opcode];
                 }
-            }else if(i <= regs[current.src1Idx].regTimer){
-                addDependency(&node ,regs[current.src1Idx].inst);
-                regs[current.dstIdx].regTimer = regs[current.src1Idx].regTimer + 1 + this->opsLatency[current.opcode];
-            }else if(i <= regs[current.src2Idx].regTimer) {
-                addDependency(&node, regs[current.src2Idx].inst);
-                regs[current.dstIdx].regTimer = regs[current.src2Idx].regTimer + 1 + this->opsLatency[current.opcode];
-            }else {
-                regs[current.dstIdx].regTimer = i + 1 + this->opsLatency[current.opcode];
             }
+            else regs[current.dstIdx].regTimer = i + 1 + this->opsLatency[current.opcode];
             regs[current.dstIdx].instPos = i;
             regs[current.dstIdx].inst = &node;
             this->nodePtrArry[i] = &node;
@@ -158,7 +167,7 @@ public:
 
     int getProgDepth(){
         exitNode* current = this->exit->exitList;
-        int max_depth = 0;
+        unsigned int max_depth = 0;
         while(current != nullptr){
             if(current->node->longestPath > max_depth){
                 max_depth = current->node->longestPath;
@@ -171,10 +180,12 @@ public:
 
 ProgCtx analyzeProg(const unsigned int opsLatency[], const InstInfo progTrace[], unsigned int numOfInsts) {
     try {
+        std::cout << "check analyzeProg" << std::endl;
         Analyzer *analyzer = new Analyzer(opsLatency, progTrace, numOfInsts);
+        std::cout << "check new Analyzer" << std::endl;
         analyzer->computeDataFlowGraph();
         return analyzer;
-    }catch(std::bad_alloc&){
+    }catch(std::bad_alloc& e){
         return PROG_CTX_NULL;
     }
 }
