@@ -29,10 +29,10 @@ public:
 
 class RegInfo{
 public:
-    int regTimer;
-    int instPos;
+    unsigned int regTimer;
+    unsigned int instPos;
     Node* inst;
-    RegInfo():regTimer(0) ,instPos(-1) ,inst(nullptr){}
+    RegInfo():regTimer(0) ,instPos(0) ,inst(nullptr){}
 
 };
 
@@ -51,7 +51,7 @@ public:
         Exit tail;
         this->exit = &tail;
         addDependency(nullptr ,entry);
-        for(int i = 0 ; i < this->numOfInsts ; i++){
+        for(unsigned int i = 0 ; i < this->numOfInsts ; i++){
             nodePtrArry[i] = nullptr;
         }
     };
@@ -91,7 +91,7 @@ public:
 
     void computeDataFlowGraph(){
         RegInfo regs[32];
-        for(int i = 0 ; i < this->numOfInsts ; i++){
+        for(unsigned int i = 0 ; i < this->numOfInsts ; i++){
             const InstInfo current = progTrace[i];
             Node node(&current);
             if(i < regs[current.src1Idx].regTimer && i < regs[current.src2Idx].regTimer){

@@ -21,7 +21,7 @@ endif
 # Automatically detect whether the bp is C or C++
 # Must have either dflow_calc.c or dflow_calc.cpp - NOT both
 SRC_DFLOW = $(wildcard dflow_calc.c dflow_calc.cpp)
-SRC_GIVEN = dflow_main.c
+SRC_GIVEN = dflow_main.c 
 EXTRA_DEPS = dflow_calc.h
 
 OBJ_GIVEN = $(patsubst %.c,%.o,$(SRC_GIVEN))
