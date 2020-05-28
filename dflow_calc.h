@@ -64,6 +64,9 @@ int getInstDeps(ProgCtx ctx, unsigned int theInst, int *src1DepInst, int *src2De
 */
 int getProgDepth(ProgCtx ctx);
 
+void printNodePtrArray(ProgCtx ctx);
+int getRegfalseDeps(ProgCtx ctx, unsigned int reg);
+
 #ifdef __cplusplus
 }
 #endif

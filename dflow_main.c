@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include "dflow_calc.h"
 
+
 /// Quota of program buffer size increase
 #define PROG_SIZE_QUOTA 64
 
@@ -207,6 +208,13 @@ int main(int argc, const char *argv[]) {
     progBuf[9].src2Idx =  17;
 
     ctx = analyzeProg(opsLatencyy, progBuf, 10);
+    printf("getProgDepth()=%d\n", getProgDepth(ctx));
+    printf("getDepDepth(0)=%d\n", getInstDepth(ctx,0));
+    printf("getDepDepth(3)=%d\n", getInstDepth(ctx,3));
+    printf("getDepDepth(5)=%d\n", getInstDepth(ctx,5));
+    printf("getDepDepth(7)=%d\n", getInstDepth(ctx,7));
+    printf("getDepDepth(9)=%d\n", getInstDepth(ctx,9));
+
     //ctx = analyzeProg(opsLatency, theProg, progLen);
     /*
     if (ctx == PROG_CTX_NULL) {
